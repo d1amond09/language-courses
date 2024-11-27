@@ -80,18 +80,21 @@ export default function Filter({ filter, setFilter, onSearch }) {
                 Поиск
             </Button>
 
-            <Button onClick={() => setFilter({
-                searchTrainingProgram: "",
-                searchTerm: "",
-                minHours: "",
-                maxHours: "",
-                minTuitionFee: "",
-                maxTuitionFee: "",
-                orderBy: "name",
-                sortOrder: "desc",
-                pageNumber: 1, 
-                pageSize: 6,
-            })}>
+            <Button onClick={() => {
+                setFilter({
+                    searchTrainingProgram: "",
+                    searchTerm: "",
+                    minHours: "",
+                    maxHours: "",
+                    minTuitionFee: "",
+                    maxTuitionFee: "",
+                    orderBy: "name",
+                    sortOrder: "desc",
+                    pageNumber: 1, 
+                    pageSize: 6,
+                });
+                onSearch();
+            }}>
                 Сбросить фильтры
             </Button>
         </div>

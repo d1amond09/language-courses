@@ -1,17 +1,14 @@
 import axios from 'axios';
 
-export const fetchCourses = async (filter) => {
+export const fetchEmployees = async (filter) => {
     try {
         const token = localStorage.getItem('token');
         const params = {};
 
         if (filter.pageNumber) params.pageNumber = filter.pageNumber;
         if (filter.pageSize) params.pageSize = filter.pageSize;
-        if (filter.minHours) params.minHours = filter.minHours;
-        if (filter.maxHours) params.maxHours = filter.maxHours;
-        if (filter.minTuitionFee) params.minTuitionFee = filter.minTuitionFee;
-        if (filter.maxTuitionFee) params.maxTuitionFee = filter.maxTuitionFee;
-        if (filter.searchTrainingProgram) params.searchTrainingProgram = filter.searchTrainingProgram;
+        if (filter.education) params.education = filter.education;
+        if (filter.jobTitle) params.jobTitle = filter.jobTitle;
         if (filter.searchTerm) params.searchTerm = filter.searchTerm;
         
         if (filter.orderBy) {
@@ -21,7 +18,7 @@ export const fetchCourses = async (filter) => {
             }
         }
 
-        const response = await axios.get('https://localhost:8007/api/courses', {
+        const response = await axios.get('https://localhost:8007/api/employees', {
             params: params,
             headers: {
                 'Accept': 'application/json',
@@ -30,7 +27,7 @@ export const fetchCourses = async (filter) => {
         });
 
         return {
-            courses: response.data,
+            employees: response.data,
             totalPages: JSON.parse(response.headers["x-pagination"]).TotalPages
         };
     } catch (error) {
@@ -39,13 +36,32 @@ export const fetchCourses = async (filter) => {
     }
 };
 
-
-
-export const createCourse = async (course) => {
+export const fetchAllEmployees = async () => {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await axios.post('https://localhost:8007/api/courses', course, {
+        const response = await axios.get('https://localhost:8007/api/employees?fields=id,fullname&PageSize=2000', {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        return {
+            employees: response.data,
+        };
+    } catch (error) {
+        console.error('Ошибка при получении курсов:', error);
+        return []; 
+    }
+};
+
+
+export const createEmployee = async (employee) => {
+    try {
+        const token = localStorage.getItem('token');
+
+        const response = await axios.post('https://localhost:8007/api/employees', employee, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,
