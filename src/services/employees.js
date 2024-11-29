@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL_COURSES } from '../config';
+import { API_BASE_URL } from '../config';
 
 export const fetchEmployees = async (filter) => {
     try {
@@ -19,7 +19,7 @@ export const fetchEmployees = async (filter) => {
             }
         }
 
-        const response = await axios.get(`${API_BASE_URL_COURSES}/employees`, {
+        const response = await axios.get(`${API_BASE_URL}/employees`, {
             params: params,
             headers: {
                 'Accept': 'application/json',
@@ -41,7 +41,7 @@ export const fetchAllEmployees = async () => {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await axios.get(`${API_BASE_URL_COURSES}/employees?fields=id,fullname&PageSize=2000`, {
+        const response = await axios.get(`${API_BASE_URL}/employees?fields=id,fullname&PageSize=2000`, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -62,7 +62,7 @@ export const createEmployee = async (employee) => {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await axios.post(`${API_BASE_URL_COURSES}/employees`, employee, {
+        const response = await axios.post(`${API_BASE_URL}/employees`, employee, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,

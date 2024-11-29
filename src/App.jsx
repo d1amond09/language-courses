@@ -11,7 +11,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { createCourse, updateCourse } from './services/courses';
 import EditCourseForm from './components/Courses/EditCourseForm';
 import DeleteCourseForm from './components/Courses/DeleteCourseForm';
-import { AuthContext } from './context/AuthContext';
+import JobTitles from './components/JobTitles';
+import CreateJobTitleForm from './components/JobTitles/CreateCourseForm';
+import EditJobTitleForm from './components/JobTitles/EditJobTitleForm';
+import DeleteJobTitleForm from './components/JobTitles/DeleteJobTitleForm';
 
 function App() {
   const onCreateCourse = async (course) => {
@@ -19,7 +22,7 @@ function App() {
   };
   
   useEffect(() => {
-    
+
 }, []);
 
   return (
@@ -40,7 +43,7 @@ function App() {
               <Link to="/courses">
                 <Button size="lg" colorScheme="blue" variant="solid" width="full"> Сотрудники </Button>
               </Link>
-              <Link to="/courses">
+              <Link to="/jobtitles">
                 <Button size="lg" colorScheme="blue" variant="solid" width="full"> Должности </Button>
               </Link>
               <AuthDisplay />
@@ -48,6 +51,10 @@ function App() {
 
             <Routes>
               <Route path="/courses" element={<PrivateRoute> <Courses /> </PrivateRoute>} />
+              <Route path="/jobtitles" element={<PrivateRoute> <JobTitles /> </PrivateRoute>} />
+              <Route path="/jobtitles/create" element={<CreateJobTitleForm />} />
+              <Route path="/jobtitles/edit/:id" element={<EditJobTitleForm />} />
+              <Route path="/jobtitles/delete/:id" element={<DeleteJobTitleForm />} />
               <Route path="/courses/create" element={<CreateCourseFrom onCreate={onCreateCourse} />} />
               <Route path="/courses/edit/:id" element={<EditCourseForm />} />
               <Route path="/courses/delete/:id" element={<DeleteCourseForm />} />

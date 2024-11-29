@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_BASE_URL_COURSES } from '../config';
+import { API_BASE_URL } from '../config';
 import { apiFetch } from './authentication';
 
 export const fetchCourses = async (filter) => {
@@ -21,7 +20,7 @@ export const fetchCourses = async (filter) => {
             }
         }
 
-        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses`, {
+        const response = await apiFetch(`${API_BASE_URL}/courses`, {
             method: "GET",
             params: params,
         });
@@ -40,7 +39,7 @@ export const fetchCourses = async (filter) => {
 
 export const createCourse = async (course) => {
     try {
-        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses`, {
+        const response = await apiFetch(`${API_BASE_URL}/courses`, {
             method: "POST",
             data: course,
         });
@@ -54,7 +53,7 @@ export const createCourse = async (course) => {
 export const fetchCourseById = async (id) => {
     try {
 
-        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${id}`, {
+        const response = await apiFetch(`${API_BASE_URL}/courses/${id}`, {
             method: "GET",
         });
         return response.data;
@@ -66,7 +65,7 @@ export const fetchCourseById = async (id) => {
 
 export const updateCourse = async (course) => {
     try {
-        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${course.id}`, {
+        const response = await apiFetch(`${API_BASE_URL}/courses/${course.id}`, {
             method: "PUT",
             data: course,
         });
@@ -80,7 +79,7 @@ export const updateCourse = async (course) => {
 
 export const deleteCourse = async (id) => {
     try {
-        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${id}`, {
+        const response = await apiFetch(`${API_BASE_URL}/courses/${id}`, {
             method: "DELETE",
         });
 
