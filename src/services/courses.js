@@ -1,10 +1,10 @@
 import axios from 'axios';
+import { API_BASE_URL_COURSES } from '../config';
+import { apiFetch } from './authentication';
 
 export const fetchCourses = async (filter) => {
     try {
-        const token = localStorage.getItem('token');
-        const params = {};
-
+        const params = {};    
         if (filter.pageNumber) params.pageNumber = filter.pageNumber;
         if (filter.pageSize) params.pageSize = filter.pageSize;
         if (filter.minHours) params.minHours = filter.minHours;
@@ -21,12 +21,9 @@ export const fetchCourses = async (filter) => {
             }
         }
 
-        const response = await axios.get('https://localhost:8007/api/courses', {
+        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses`, {
+            method: "GET",
             params: params,
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
         });
 
         return {
@@ -43,17 +40,52 @@ export const fetchCourses = async (filter) => {
 
 export const createCourse = async (course) => {
     try {
-        const token = localStorage.getItem('token');
+        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses`, {
+            method: "POST",
+            data: course,
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Ошибка при создании курса:', error);
+    }
+};
 
-        const response = await axios.post('https://localhost:8007/api/courses', course, {
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
+
+export const fetchCourseById = async (id) => {
+    try {
+
+        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${id}`, {
+            method: "GET",
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка при получении курса:', error);
+        return null;
+    }
+};
+
+export const updateCourse = async (course) => {
+    try {
+        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${course.id}`, {
+            method: "PUT",
+            data: course,
         });
 
         return response.status;
     } catch (error) {
-        console.error('Ошибка при создании курса:', error);
+        console.error('Ошибка при обновлении курса:', error);
+    }
+};
+
+
+export const deleteCourse = async (id) => {
+    try {
+        const response = await apiFetch(`${API_BASE_URL_COURSES}/courses/${id}`, {
+            method: "DELETE",
+        });
+
+        return response.status;
+    } catch (error) {
+        console.error('Ошибка при удалении курса:', error);
     }
 };

@@ -91,7 +91,7 @@ export default function Filter({ filter, setFilter, onSearch }) {
                     orderBy: "name",
                     sortOrder: "desc",
                     pageNumber: 1, 
-                    pageSize: 6,
+                    pageSize: 4,
                 });
                 onSearch();
             }}>

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, FormLabel, Input, Text } from '@chakra-ui/react';
+import { signIn } from '../../services/authentication';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -15,24 +16,16 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('https://localhost:8003/api/authentication/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const { accessToken, refreshToken } = await response.json();
-        login(accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+      const response = await signIn({username, password});
+      console.log(response);
+      if (response.status == 200) {
+        const { accessToken, refreshToken } = await response.data;
+        login(accessToken, refreshToken);
         navigate('/'); 
       } else if (response.status === 401) {
         setError('Ошибка входа. Пожалуйста, проверьте ваши учетные данные.');
       } else {
-        const data = await response.json();
+        const data = await response.data;
         setError(data.message || 'Произошла ошибка. Пожалуйста, попробуйте позже.');
       }
     } catch (err) {

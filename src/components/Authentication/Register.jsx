@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, Text, Stack } from '@chakra-ui/react';
+import { API_BASE_URL_AUTH } from '../../config';
+import { register } from '../../services/authentication';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -28,14 +30,7 @@ const Register = () => {
         setSuccessMessage('');
 
         try {
-            const response = await fetch('https://localhost:8003/api/authentication', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-                credentials: 'include'
-            });
+            const response = await register(formData);
 
             if (response.ok) {
                 setSuccessMessage('Регистрация прошла успешно! Проверьте ваш email для подтверждения.');
