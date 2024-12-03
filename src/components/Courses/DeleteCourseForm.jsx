@@ -12,6 +12,7 @@ export default function DeleteCourseForm() {
             if (response === 204) { 
                 alert('Курс успешно удалён.');
                 navigate('/courses'); 
+                window.location.reload(); 
             } else {
                 alert('Ошибка при удалении курса.');
             }

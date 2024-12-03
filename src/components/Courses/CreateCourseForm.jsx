@@ -2,8 +2,9 @@ import { Button, Input, InputGroup, Select, InputRightElement, Textarea, HStack 
 import { useState, useEffect } from 'react';
 import { fetchAllEmployees } from "../../services/employees";
 import { useLocation, useNavigate } from "react-router-dom";
+import { createCourse, updateCourse } from "../../services/courses";
 
-export default function CreateCourseForm({ onCreate, initialCourse }) {
+export default function CreateCourseForm({ initialCourse }) {
     const [course, setCourse] = useState(initialCourse || {
         name:"", description:"", tuitionFee:"", 
         trainingProgram:"", intensity:"", 
@@ -26,12 +27,17 @@ export default function CreateCourseForm({ onCreate, initialCourse }) {
     }, []);
 
     const navigate = useNavigate(); 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
         const courseWithEmployee = { ...course, employeeId: selectedEmployee };
         setCourse({});
-        onCreate(courseWithEmployee);
-        navigate('/courses'); 
+        if (initialEmployee) {
+            await updateCourse(courseWithEmployee); 
+        } else {
+            await createCourse(courseWithEmployee);
+        }
+        navigate('/courses');  
+        window.location.reload();
     }
 
     return (

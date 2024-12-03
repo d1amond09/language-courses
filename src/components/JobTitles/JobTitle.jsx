@@ -15,7 +15,8 @@ export default function JobTitle({
     name, 
     salary, 
     responsibilities, 
-    requirements 
+    requirements,
+    isAdmin
 }) {
     return (
         <Card variant={'filled'}>
@@ -31,14 +32,18 @@ export default function JobTitle({
                 <Text>{requirements}</Text>
             </CardBody>
             <Divider borderColor={'gray'}/>
-            <CardFooter>
-                <Link to={`/jobtitles/edit/${id}`}>
-                    <Button className='ml-5' size="md" colorScheme="blue" variant="solid" width="full"> Изменить </Button>
-                </Link>
-                <Link to={`/jobtitles/delete/${id}`}>
-                    <Button className='ml-10' size="md" colorScheme="red" variant="solid" width="full"> Удалить </Button>
-                </Link>
-            </CardFooter>
+            {
+                            isAdmin ? (
+                    <CardFooter>
+                        <Link to={`/jobtitles/edit/${id}`}>
+                            <Button className='ml-5' size="md" colorScheme="blue" variant="solid" width="full"> Изменить </Button>
+                        </Link>
+                        <Link to={`/jobtitles/delete/${id}`}>
+                            <Button className='ml-10' size="md" colorScheme="red" variant="solid" width="full"> Удалить </Button>
+                        </Link>
+                    </CardFooter>
+                ) : ""
+            }
         </Card>
     );
 }

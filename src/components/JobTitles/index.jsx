@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import JobTitle from './JobTitle'; 
 import Filter from './FiltersForJobTitles.jsx'; 
 import Pagination from '../Pagination';
 import { fetchJobTitles } from '../../services/jobTitles'; 
 import { Link } from 'react-router-dom';
 import { Button } from '@chakra-ui/react';
+import { AuthContext } from '../../context/AuthContext.jsx';
 
 export default function JobTitles() {
+    const { isAdmin } = useContext(AuthContext);
+    const admin = isAdmin();
     const [jobTitles, setJobTitles] = useState([]);
     const [filter, setFilter] = useState({
         searchTerm: "",
@@ -51,9 +54,13 @@ export default function JobTitles() {
                     onPageChange={handlePageChange}
                 />
 
-                <Link to="/jobtitles/create">
-                    <Button size="lg" colorScheme="blue" variant="solid" width="full"> Создать должность </Button>
-                </Link>
+                { admin ? (
+                        <Link to="/jobtitles/create">
+                            <Button size="lg" colorScheme="blue" variant="solid" width="full"> Создать должность </Button>
+                        </Link>
+                    ) : "" 
+                }
+                
             </div>
             <div className='flex-1 w-1/2'>
                 <ul className='grid grid-cols-2 gap-5'> 
@@ -66,6 +73,7 @@ export default function JobTitles() {
                                 salary={jt.Salary} 
                                 responsibilities={jt.Responsibilities} 
                                 requirements={jt.Requirements}  
+                                isAdmin={admin}
                             />
                         </li>
                     ))

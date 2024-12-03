@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import decodeJwt, { isTokenExpired } from '../utils/jwtUtils';
 import { refreshAccessToken } from '../services/authentication';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -8,7 +9,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         initializeUser();
     }, [token, refreshToken]);
@@ -50,16 +52,24 @@ export const AuthProvider = ({ children }) => {
         setUser(decodeUser(accessToken));
     };
 
+    const isAdmin = () => {
+        console.log(user);
+        const admin = user?.role.includes("Administrator");
+        console.log(admin);
+        return admin;
+    }
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         setToken(null);
         setRefreshToken(null);
         setUser(null);
+        navigate('/login');
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, initializeUser }}>
+        <AuthContext.Provider value={{ user, isAdmin, login, logout, initializeUser }}>
             {children}
         </AuthContext.Provider>
     );

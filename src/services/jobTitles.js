@@ -80,3 +80,18 @@ export const deleteJobTitle = async (id) => {
         console.error('Ошибка при удалении должности:', error);
     }
 };
+
+export const fetchAllJobTitles = async () => {
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/jobtitles?fields=id,name&PageSize=500`, {
+            method: "GET",
+        });
+
+        return {
+            jobTitles: response.data,
+        };
+    } catch (error) {
+        console.error('Ошибка при получении должностей:', error);
+        return []; 
+    }
+};

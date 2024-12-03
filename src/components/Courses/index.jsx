@@ -3,12 +3,14 @@ import { AuthContext } from '../../context/AuthContext';
 import '../../App.css';
 import Course from './Course';
 import Filter from './FiltersForCourses';
-import { fetchCourses } from '../../services/courses';
+import { fetchCourses, deleteCourse } from '../../services/courses';
 import Pagination from '../Pagination';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@chakra-ui/react';
 
 export default function Courses() {
+    const { isAdmin } = useContext(AuthContext);
+    const admin = isAdmin();
     const [courses, setCourses] = useState([]);
     const [filter, setFilter] = useState({
         searchTrainingProgram: "",
@@ -25,30 +27,22 @@ export default function Courses() {
   
     const [totalPages, setTotalPages] = useState(0);
 
-    const handleSearch = async () => {
-        const { courses, totalPages } = await fetchCourses(filter);
-        setCourses(courses); 
-        setTotalPages(totalPages);
+    const fetchData = async () => {
+        const { courses, totalPages } = await fetchCourses({ ...filter, pageNumber: filter.pageNumber });
+        setCourses(courses);
+        setTotalPages(totalPages); 
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { courses, totalPages } = await fetchCourses({ 
-                ...filter, 
-                searchTerm: "", 
-                pageNumber: 1 
-            });
-            
-            setCourses(courses);
-            setTotalPages(totalPages); 
-        };
-
         fetchData();
     }, [filter]);
 
+    const handleSearch = async () => {
+        await fetchData(); 
+    };
+
     const handlePageChange = (page) => {
         setFilter((prev) => ({ ...prev, pageNumber: page }));
-        handleSearch(); 
     };
 
     return (
@@ -60,10 +54,12 @@ export default function Courses() {
                     totalPages={totalPages || 0}
                     onPageChange={handlePageChange}
                 />
-
-                <Link to="/courses/create">
-                    <Button size="lg" colorScheme="blue" variant="solid" width="full"> Создать курс </Button>
-                </Link>
+                {
+                    admin ? ( 
+                    <Link to="/courses/create">
+                        <Button size="lg" colorScheme="blue" variant="solid" width="full"> Создать курс </Button>
+                    </Link>) : ""
+                }
             </div>
             <div className='flex-1 w-1/2'>
                 <ul className='grid grid-cols-2 gap-5'> 
@@ -80,6 +76,7 @@ export default function Courses() {
                                 groupSize={c.GroupSize} 
                                 availableSeats={c.AvailableSeats} 
                                 trainingProgram={c.TrainingProgram}  
+                                isAdmin={admin}
                             />
                         </li>
                     ))

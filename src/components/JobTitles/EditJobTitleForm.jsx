@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CreateJobTitleForm from "./CreateCourseForm";
 import { fetchJobTitleById } from "../../services/jobTitles";
+import CreateJobTitleForm from "./CreateJobTitleForm";
 
 export default function EditJobTitleForm() {
     const [jobTitle, setJobTitle] = useState(null);

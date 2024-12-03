@@ -43,6 +43,7 @@ export const createCourse = async (course) => {
             method: "POST",
             data: course,
         });
+        
         return response.status;
     } catch (error) {
         console.error('Ошибка при создании курса:', error);
@@ -69,7 +70,6 @@ export const updateCourse = async (course) => {
             method: "PUT",
             data: course,
         });
-
         return response.status;
     } catch (error) {
         console.error('Ошибка при обновлении курса:', error);
@@ -82,7 +82,7 @@ export const deleteCourse = async (id) => {
         const response = await apiFetch(`${API_BASE_URL}/courses/${id}`, {
             method: "DELETE",
         });
-
+        
         return response.status;
     } catch (error) {
         console.error('Ошибка при удалении курса:', error);

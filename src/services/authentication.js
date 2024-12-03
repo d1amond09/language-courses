@@ -36,6 +36,7 @@ export const refreshAccessToken = async () => {
         const response = await axios.post(`${API_BASE_URL_AUTH}/token/refresh`, formData, {
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             credentials: 'include'
         });
@@ -45,6 +46,8 @@ export const refreshAccessToken = async () => {
         return accessToken;
     } catch (error) {
         console.error('Ошибка при обновлении токена:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         return null; 
     }
 };
@@ -53,6 +56,7 @@ export const signIn = async ({username, password}) => {
     const response = await axios.post(`${API_BASE_URL_AUTH}/authentication/login`, { username, password }, {
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
         },
         credentials: 'include'
     });
@@ -63,6 +67,7 @@ export const register = async (data) => {
     const response = await axios.post(`${API_BASE_URL_AUTH}/authentication`, data, {
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
         },
         credentials: 'include'
     });

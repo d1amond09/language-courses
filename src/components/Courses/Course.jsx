@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 export default function Course({ id,
         name, description, tuitionFee, 
         trainingProgram, intensity, 
-        availableSeats, groupSize, hours}) {
+        availableSeats, groupSize, hours, isAdmin}) {
     return (
         <Card variant={'filled'}>
             <CardHeader>
@@ -31,15 +31,18 @@ export default function Course({ id,
                 </Text>
             </CardBody>
             <Divider borderColor={'gray'}/>
-            <CardFooter>
-                <Heading size={'md'}>{tuitionFee} руб.</Heading>
-                <Link to={`/courses/edit/${id}`}>
-                    <Button className='ml-5' size="md" colorScheme="blue" variant="solid" width="full"> Изменить </Button>
-                </Link>
-                <Link to={`/courses/delete/${id}`}>
-                    <Button className='ml-10' size="md" colorScheme="red" variant="solid" width="full"> Удалить </Button>
-                </Link>
-            </CardFooter>
+            {
+                isAdmin ? (
+                <CardFooter>
+                    <Heading size={'md'}>{tuitionFee} руб.</Heading>
+                    <Link to={`/courses/edit/${id}`}>
+                        <Button className='ml-5' size="md" colorScheme="blue" variant="solid" width="full"> Изменить </Button>
+                    </Link>
+                    <Link to={`/courses/delete/${id}`}>
+                        <Button className='ml-10' size="md" colorScheme="red" variant="solid" width="full"> Удалить </Button>
+                    </Link>
+                </CardFooter>) : ""
+            }
         </Card>
     )
 }

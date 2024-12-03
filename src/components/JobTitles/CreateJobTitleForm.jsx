@@ -1,8 +1,7 @@
 import { Button, Input, InputGroup, Select, InputRightElement, Textarea, HStack } from "@chakra-ui/react";
 import { useState, useEffect } from 'react';
-import { fetchAllEmployees } from "../../services/employees";
 import { createJobTitle, updateJobTitle, fetchJobTitleById } from "../../services/jobTitles"; 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateJobTitleForm({ initialJobTitle }) {
     const [jobTitle, setJobTitle] = useState(initialJobTitle || {

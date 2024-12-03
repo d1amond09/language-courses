@@ -19,5 +19,5 @@ export default function EditCourseForm() {
         fetchCourse();
     }, [id, setCourse]);
 
-    return <CreateCourseFrom onCreate={onUpdateCourse} initialCourse={course} />;
+    return <CreateCourseFrom initialCourse={course} />;
 };
