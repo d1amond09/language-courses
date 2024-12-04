@@ -53,9 +53,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const isAdmin = () => {
-        console.log(user);
         const admin = user?.role.includes("Administrator");
-        console.log(admin);
         return admin;
     }
 

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchEmployeeById } from "../../services/employees";
-import CreateEmployeeForm from "./CreateEmployeeFrom"; 
+import CreateEmployeeForm from "./CreateEmployeeForm"; 
 
 export default function EditEmployeeForm() {
     const [employee, setEmployee] = useState(null);

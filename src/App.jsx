@@ -16,9 +16,13 @@ import CreateJobTitleForm from './components/JobTitles/CreateJobTitleForm';
 import EditJobTitleForm from './components/JobTitles/EditJobTitleForm';
 import DeleteJobTitleForm from './components/JobTitles/DeleteJobTitleForm';
 import Employees from './components/Employees';
-import CreateEmployeeForm from './components/Employees/CreateEmployeeFrom';
+import CreateEmployeeForm from './components/Employees/CreateEmployeeForm';
 import EditEmployeeForm from './components/Employees/EditEmployeeForm';
-import DeleteEmployeeForm from './components/Employees/DeleteEmployeeFrom';
+import DeleteEmployeeForm from './components/Employees/DeleteEmployeeForm';
+import CreatePaymentForm from './components/Payments/CreatePaymentForm';
+import EditPaymentForm from './components/Payments/EditPaymentForm';
+import DeletePaymentForm from './components/Payments/DeletePaymentForm';
+import Payments from './components/Payments';
 
 function App() {
   const onCreateCourse = async (course) => {
@@ -39,7 +43,7 @@ function App() {
               <Link to="/employees">
                 <Button size="lg" colorScheme="blue" variant="solid" width="full"> Cлушатели </Button>
               </Link>
-              <Link to="/employees">
+              <Link to="/payments">
                 <Button size="lg" colorScheme="blue" variant="solid" width="full"> Платежи </Button>
               </Link>
               <Link to="/employees">
@@ -61,6 +65,11 @@ function App() {
               <Route path="/employees/create" element={<CreateEmployeeForm />} />
               <Route path="/employees/edit/:id" element={<EditEmployeeForm />} />
               <Route path="/employees/delete/:id" element={<DeleteEmployeeForm />} />
+
+              <Route path="/payments" element={<PrivateRoute> <Payments /> </PrivateRoute>} />
+              <Route path="/payments/create" element={<CreatePaymentForm />} />
+              <Route path="/payments/edit/:id" element={<EditPaymentForm />} />
+              <Route path="/payments/delete/:id" element={<DeletePaymentForm />} />
 
               <Route path="/courses" element={<PrivateRoute> <Courses /> </PrivateRoute>} />
               <Route path="/courses/create" element={<CreateCourseFrom onCreate={onCreateCourse} />} />

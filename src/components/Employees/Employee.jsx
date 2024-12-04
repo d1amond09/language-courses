@@ -23,7 +23,6 @@ export default function Employee({
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchJobTitleById(jobTitleId); 
-            console.log(data)
             setJobTitle(data);    
         };
         fetchData();
