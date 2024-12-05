@@ -17,7 +17,6 @@ const Login = () => {
 
     try {
       const response = await signIn({username, password});
-      console.log(response);
       if (response.status == 200) {
         const { accessToken, refreshToken } = await response.data;
         login(accessToken, refreshToken);

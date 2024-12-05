@@ -1,7 +1,7 @@
 import React from 'react';
-import { Input, Button, Select } from '@chakra-ui/react';
+import { Input, Button, Select, Flex } from '@chakra-ui/react';
 
-export default function FiltersForPayments({ filter, setFilter, onSearch }) {
+export default function Filters({ filter, setFilter, onSearch }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFilter((prev) => ({ ...prev, [name]: value }));
@@ -16,35 +16,41 @@ export default function FiltersForPayments({ filter, setFilter, onSearch }) {
                 onChange={handleInputChange} 
             />
 
-            <Input 
-                type="number"
-                placeholder="Мин. сумма" 
-                name="minAmount"
-                value={filter.minAmount || ""}
-                onChange={handleInputChange} 
-            />
+            
 
-            <Input 
-                type="number"
-                placeholder="Макс. сумма" 
-                name="maxAmount"
-                value={filter.maxAmount || ""}
-                onChange={handleInputChange} 
-            />
+            <Flex gap="5">
+                <Input 
+                    type="number"
+                    placeholder="Мин. сумма" 
+                    name="minAmount"
+                    value={filter.minAmount || ""}
+                    onChange={handleInputChange} 
+                />
 
-            <Input 
-                type="date"
-                name="minDate"
-                value={filter.minDate || ""}
-                onChange={handleInputChange} 
-            />
+                <Input 
+                    type="number"
+                    placeholder="Макс. сумма" 
+                    name="maxAmount"
+                    value={filter.maxAmount || ""}
+                    onChange={handleInputChange} 
+                />
+            </Flex>
 
-            <Input 
-                type="date"
-                name="maxDate"
-                value={filter.maxDate || ""}
-                onChange={handleInputChange} 
-            />
+            <Flex gap="5">
+                <Input 
+                    type="date"
+                    name="minDate"
+                    value={filter.minDate || ""}
+                    onChange={handleInputChange} 
+                />
+
+                <Input 
+                    type="date"
+                    name="maxDate"
+                    value={filter.maxDate || ""}
+                    onChange={handleInputChange} 
+                />
+            </Flex>
 
             <Select 
                 name="orderBy" 

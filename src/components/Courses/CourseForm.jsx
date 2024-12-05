@@ -1,22 +1,22 @@
 import { Button, Input, InputGroup, Select, InputRightElement, Textarea, HStack } from "@chakra-ui/react";
 import { useState, useEffect } from 'react';
 import { fetchAllEmployees } from "../../services/employees";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createCourse, updateCourse } from "../../services/courses";
 
-export default function CreateCourseForm({ initialCourse }) {
-    const [course, setCourse] = useState(initialCourse || {
+export default function CourseForm({ initialData }) {
+    const [course, setCourse] = useState(initialData || {
         name:"", description:"", tuitionFee:"", 
         trainingProgram:"", intensity:"", 
         availableSeats:"", groupSize:"", hours:""
     });
     const [employees, setEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(initialCourse?.employeeId || "");
+    const [selectedEmployee, setSelectedEmployee] = useState(initialData?.employeeId || "");
 
     useEffect(() => {
-        setCourse(initialCourse || {});
-        setSelectedEmployee(initialCourse?.employeeId || "");
-    }, [initialCourse]);
+        setCourse(initialData || {});
+        setSelectedEmployee(initialData?.employeeId || "");
+    }, [initialData]);
 
     useEffect(() => {   
         const fetchData = async () => {
@@ -31,7 +31,7 @@ export default function CreateCourseForm({ initialCourse }) {
         e.preventDefault();
         const courseWithEmployee = { ...course, employeeId: selectedEmployee };
         setCourse({});
-        if (initialEmployee) {
+        if (initialData) {
             await updateCourse(courseWithEmployee); 
         } else {
             await createCourse(courseWithEmployee);
@@ -44,7 +44,7 @@ export default function CreateCourseForm({ initialCourse }) {
         <form onSubmit={onSubmit} className="w-3/4 flex flex-col gap-10">
             <div className="place-items-center mt-12">
                 <h1 className="font-bold text-4xl center">
-                    {initialCourse ? "Изменение курса" : "Создание курса"}
+                    {initialData ? "Изменение курса" : "Создание курса"}
                 </h1>
             </div>
             <Input required
@@ -123,7 +123,7 @@ export default function CreateCourseForm({ initialCourse }) {
                 </InputGroup>
             </HStack>
             <Button type="submit" colorScheme="blue">
-                {initialCourse ? "Сохранить изменения" : "Создать"}
+                {initialData ? "Сохранить изменения" : "Создать"}
             </Button>
         </form>
     );

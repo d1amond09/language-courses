@@ -7,7 +7,7 @@ const AuthDisplay = () => {
   const { user, logout } = useContext(AuthContext);
   
   return (
-    <Box>
+    <Box position={'fixed'} display={'flex'} right={2} top={2}>
       {user ? ( 
         <Stack direction="row" spacing={4} align="center">
           <Text fontSize="lg">{user.username}</Text> 

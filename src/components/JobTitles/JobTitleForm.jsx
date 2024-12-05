@@ -3,26 +3,26 @@ import { useState, useEffect } from 'react';
 import { createJobTitle, updateJobTitle, fetchJobTitleById } from "../../services/jobTitles"; 
 import { useNavigate } from "react-router-dom";
 
-export default function CreateJobTitleForm({ initialJobTitle }) {
-    const [jobTitle, setJobTitle] = useState(initialJobTitle || {
+export default function JobTitleForm({ initialData }) {
+    const [jobTitle, setJobTitle] = useState(initialData || {
+        id: "",
         name: "",
         description: "",
         salary: "",
         responsibilities: "",
         requirements: "",
-        employeeId: ""
     });
 
     useEffect(() => {
-        setJobTitle(initialJobTitle || {});
-    }, [initialJobTitle]);
+        setJobTitle(initialData || {});
+    }, [initialData]);
 
     const navigate = useNavigate(); 
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (initialJobTitle) {
+        if (initialData) {
             await updateJobTitle(jobTitle); 
         } else {
             await createJobTitle(jobTitle);
@@ -36,7 +36,7 @@ export default function CreateJobTitleForm({ initialJobTitle }) {
         <form onSubmit={onSubmit} className="w-3/4 flex flex-col gap-10">
             <div className="place-items-center mt-12">
                 <h1 className="font-bold text-4xl center">
-                    {initialJobTitle ? "Изменение должности" : "Создание должности"}
+                    {initialData ? "Изменение должности" : "Создание должности"}
                 </h1>
             </div>
             <Input required
@@ -71,7 +71,7 @@ export default function CreateJobTitleForm({ initialJobTitle }) {
             />
 
             <Button type="submit" colorScheme="blue">
-                {initialJobTitle ? "Сохранить изменения" : "Создать"}
+                {initialData ? "Сохранить изменения" : "Создать"}
             </Button>
         </form>
     );

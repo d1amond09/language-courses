@@ -1,7 +1,8 @@
 import React from 'react';
 import { Input, Select, Button, Flex } from '@chakra-ui/react';
+import { defaultFilters } from './data';
 
-export default function Filter({ filter, setFilter, onSearch }) {
+export default function Filters({ filter, setFilter, onSearch }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFilter((prev) => ({ ...prev, [name]: value }));
@@ -81,18 +82,7 @@ export default function Filter({ filter, setFilter, onSearch }) {
             </Button>
 
             <Button onClick={() => {
-                setFilter({
-                    searchTrainingProgram: "",
-                    searchTerm: "",
-                    minHours: "",
-                    maxHours: "",
-                    minTuitionFee: "",
-                    maxTuitionFee: "",
-                    orderBy: "name",
-                    sortOrder: "desc",
-                    pageNumber: 1, 
-                    pageSize: 4,
-                });
+                setFilter(defaultFilters);
                 onSearch();
             }}>
                 Сбросить фильтры

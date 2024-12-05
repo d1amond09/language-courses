@@ -1,90 +1,69 @@
-    import React, { useContext, useEffect, useState } from 'react';
-    import { AuthContext } from '../../context/AuthContext';
-    import '../../App.css';
-    import Course from './Course';
-    import Filter from './FiltersForCourses';
-    import { fetchCourses, deleteCourse } from '../../services/courses';
-    import Pagination from '../Pagination';
-    import { Link } from 'react-router-dom';
-    import { Button } from '@chakra-ui/react';
-
-    export default function Courses() {
-        const { isAdmin } = useContext(AuthContext);
-        const admin = isAdmin();
-        const [courses, setCourses] = useState([]);
-        const [filter, setFilter] = useState({
-            searchTrainingProgram: "",
-            searchTerm: "",
-            minHours: "",
-            maxHours: "",
-            minTuitionFee: "",
-            maxTuitionFee: "",
-            orderBy: "name",
-            sortOrder: "desc",
-            pageNumber: 1,
-            pageSize: 4,
-        });
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import Course from './Course';
+import Filters from './Filters';
+import { fetchCourses } from '../../services/courses';
+import Pagination from '../Pagination';
+import { defaultFilters } from './Filters/data';
+import CreateButton from '../Actions/CreateButton';
+import Loading from '../Loading';
+import { Box } from '@chakra-ui/react';
     
-        const [totalPages, setTotalPages] = useState(0);
-
-        const fetchData = async () => {
-            const { courses, totalPages } = await fetchCourses({ ...filter, pageNumber: filter.pageNumber });
-            setCourses(courses);
-            setTotalPages(totalPages); 
-        };
-
-        useEffect(() => {
-            fetchData();
-        }, [filter]);
-
-        const handleSearch = async () => {
-            await fetchData(); 
-        };
-
-        const handlePageChange = (page) => {
-            setFilter((prev) => ({ ...prev, pageNumber: page }));
-        };
-
-        return (
-            <section className='container p-8 flex flex-row justify-start items-start gap-12'>
-                <div className='flex flex-col w-1/4 gap-10 '>
-                    <Filter filter={filter} setFilter={setFilter} onSearch={handleSearch} />
-                    <Pagination 
-                        currentPage={filter.pageNumber}
-                        totalPages={totalPages || 0}
-                        onPageChange={handlePageChange}
-                    />
-                    {
-                        admin ? ( 
-                        <Link to="/courses/create">
-                            <Button size="lg" colorScheme="blue" variant="solid" width="full"> Создать курс </Button>
-                        </Link>) : ""
-                    }
-                </div>
-                <div className='flex-1 w-1/2'>
-                    <ul className='grid grid-cols-2 gap-5'> 
-                    {courses.length > 0 ? (
-                        courses.map((c) => (
-                            <li key={c.Id}>
-                                <Course 
-                                    id={c.Id}
-                                    name={c.Name} 
-                                    description={c.Description} 
-                                    tuitionFee={c.TuitionFee} 
-                                    hours={c.Hours} 
-                                    intensity={c.Intensity} 
-                                    groupSize={c.GroupSize} 
-                                    availableSeats={c.AvailableSeats} 
-                                    trainingProgram={c.TrainingProgram}  
-                                    isAdmin={admin}
+export default function Courses() {
+    const { isAdmin } = useContext(AuthContext);
+    const [totalPages, setTotalPages] = useState(0);
+    const [filter, setFilter] = useState(defaultFilters);
+    const [courses, setCourses] = useState([]);
+    
+    
+    const fetchData = async () => {
+        const { courses, totalPages } = await fetchCourses({ ...filter, pageNumber: filter.pageNumber });
+        setCourses(courses);
+        setTotalPages(totalPages); 
+    };
+    
+    useEffect(() => {
+        fetchData();
+    }, [filter]);
+    
+    const handleSearch = async () => {
+        await fetchData(); 
+    };
+    
+    const handlePageChange = (page) => {
+        setFilter((prev) => ({ ...prev, pageNumber: page }));
+    };
+    
+    const admin = isAdmin();
+    
+    return (
+        <section className='container flex flex-row gap-6'>
+            <div className='max-w-sm w-1/3 gap-10 '>
+                <Filters filter={filter} setFilter={setFilter} onSearch={handleSearch} />
+                { admin ? ( <CreateButton link={"courses"}/> ) : "" }
+            </div>
+            <div className='flex-1 overflow-auto'>
+                <ul className='grid grid-cols-2 gap-5'> 
+                {courses.length > 0 ? (
+                    courses.map((course) => (
+                        <li key={course.Id}>
+                            <Course
+                                course={course}
+                                isAdmin={admin}
                                 />
-                            </li>
-                        ))
-                    ) : (
-                        <h1 className='text-4xl col-span-3'>Курсы не найдены...</h1> 
-                    )}
-                    </ul>
-                </div>
-            </section>
-        );
-    }
+                        </li>
+                    ))
+                ) : (
+                    <h1 className='text-4xl col-span-3 text-center mt-56'><Loading/></h1> 
+                )}
+                </ul>
+                {courses.length > 0 && (
+                    <Pagination 
+                    currentPage={filter.pageNumber}
+                    totalPages={totalPages || 0}
+                    onPageChange={handlePageChange}
+                />)}
+            </div>
+        </section>
+    );
+}

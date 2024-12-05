@@ -1,11 +1,11 @@
-import { Button, Input, Textarea, Select } from "@chakra-ui/react";
+import { Button, Input, Select } from "@chakra-ui/react";
 import { useState, useEffect } from 'react';
 import { fetchAllStudents } from "../../services/students";
 import { useNavigate } from "react-router-dom"; 
 import { createPayment, updatePayment } from "../../services/payments";
 
-export default function CreatePaymentForm({ initialPayment }) {
-    const [payment, setPayment] = useState(initialPayment || {
+export default function PaymentForm({ initialData }) {
+    const [payment, setPayment] = useState(initialData || {
         id: "",
         studentId: "",
         date: "",
@@ -27,22 +27,22 @@ export default function CreatePaymentForm({ initialPayment }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (initialPayment) {
+        if (initialData) {
             setPayment({
-                id: initialPayment.id || "",
-                studentId: initialPayment.studentId || "",
-                date: initialPayment.date || "",
-                purpose: initialPayment.purpose || "",
-                amount: initialPayment.amount || "",
+                id: initialData.id || "",
+                studentId: initialData.studentId || "",
+                date: initialData.date || "",
+                purpose: initialData.purpose || "",
+                amount: initialData.amount || "",
             });
-            setSelectedStudent(initialPayment.studentId || "");
+            setSelectedStudent(initialData.studentId || "");
         }
-    }, [initialPayment]);
+    }, [initialData]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const paymentWithStudent = { ...payment, studentId: selectedStudent };
-        if (initialPayment) {
+        if (initialData) {
             await updatePayment(paymentWithStudent);
         } else {
             await createPayment(paymentWithStudent);
@@ -55,7 +55,7 @@ export default function CreatePaymentForm({ initialPayment }) {
         <form onSubmit={onSubmit} className="w-3/4 flex flex-col gap-10">
             <div className="place-items-center mt-12">
                 <h1 className="font-bold text-4xl center">
-                    {initialPayment ? "Изменение платежа" : "Создание платежа"}
+                    {initialData ? "Изменение платежа" : "Создание платежа"}
                 </h1>
             </div>
             <Select
@@ -89,7 +89,7 @@ export default function CreatePaymentForm({ initialPayment }) {
                 onChange={(e) => setPayment({ ...payment, amount: e.target.value })}
             />
             <Button type="submit" colorScheme="blue">
-                {initialPayment ? "Сохранить изменения" : "Создать"}
+                {initialData ? "Сохранить изменения" : "Создать"}
             </Button>
         </form>
     );

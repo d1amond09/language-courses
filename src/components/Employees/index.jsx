@@ -1,28 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Table, Thead, Th, Tr, Tbody } from '@chakra-ui/react';
+import { Button, Table, Thead, Th, Tr, Tbody, Box } from '@chakra-ui/react';
 import { fetchEmployees } from '../../services/employees';
 import Employee from './Employee'; 
-import FiltersForEmployee from './FiltersForEmployee'; 
 import Pagination from '../Pagination'; 
-import { fetchAllJobTitles, fetchJobTitleById } from '../../services/jobTitles';
+import { fetchAllJobTitles } from '../../services/jobTitles';
 import { AuthContext } from '../../context/AuthContext';
+import Filters from './Filters';
+import { defaultFilters } from './Filters/data';
+import CreateButton from '../Actions/CreateButton';
+import Loading from '../Loading';
 
 export default function Employees() {
     const { isAdmin } = useContext(AuthContext);
-    const admin = isAdmin();
     const [employees, setEmployees] = useState([]);
-    const [filter, setFilter] = useState({
-        searchTerm: "",
-        education: "",
-        jobTitleId: "",
-        orderBy: "surname",
-        sortOrder: "asc",
-        pageNumber: 1,
-        pageSize: 6,
-    });
-
+    const [filter, setFilter] = useState(defaultFilters);
     const [jobTitles, setJobTitles] = useState([]);
+    
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchAllJobTitles(); 
@@ -30,15 +24,15 @@ export default function Employees() {
         };
         fetchData();
     }, []);
-
+    
     const [totalPages, setTotalPages] = useState(0);
-
+    
     const handleSearch = async () => {
         const { employees, totalPages } = await fetchEmployees(filter);
         setEmployees(employees); 
         setTotalPages(totalPages);      
     };
-
+    
     useEffect(() => {
         const fetchData = async () => {
             const { employees, totalPages } = await fetchEmployees({ 
@@ -50,69 +44,58 @@ export default function Employees() {
             setEmployees(employees);
             setTotalPages(totalPages); 
         };
-
+        
         fetchData();
     }, [filter]);
-
+    
     const handlePageChange = (page) => {
         setFilter((prev) => ({ ...prev, pageNumber: page }));
         handleSearch(); 
     };
+    
+    const admin = isAdmin();
 
     return (
-        <section className='container p-8 flex flex-row justify-start items-start gap-12'>
-            <div className='flex flex-col w-1/4 gap-10'>
-                <FiltersForEmployee filter={filter} jobTitles={jobTitles} setFilter={setFilter} onSearch={handleSearch} />
-                <Pagination 
-                    currentPage={filter.pageNumber}
-                    totalPages={totalPages || 0}
-                    onPageChange={handlePageChange}
-                />
-                 { admin ? (
-                        <Link to="/employees/create">
-                            <Button size="lg" colorScheme="blue" variant="solid" width="full">Создать сотрудника</Button>
-                        </Link>
-                    ) : "" 
-                }
-                
+        <section className='container flex flex-row gap-5'>
+            <div className='flex flex-col w-1/6 gap-10'>
+                <Filters filter={filter} jobTitles={jobTitles} setFilter={setFilter} onSearch={handleSearch} />
+                { admin ? ( <CreateButton link={"employees"}/> ) : "" }
             </div>
-            <div className='flex-1'>
-                <Table className='min-w-full'>
-                    <Thead>
-                        <Tr>
-                            <Th>ФИО</Th>
-                            <Th>Должность</Th>
-                            <Th>Дата рождения</Th>
-                            <Th>Адрес</Th>
-                            <Th>Телефон</Th>
-                            <Th>Номер паспорта</Th>
-                            <Th>Образование</Th>
-                            { admin ? (<Th>Действия</Th>) : "" }
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {employees.length > 0 ? (
-                            employees.map((e, index) => (
-                                <Employee 
-                                    key={e.Id}
-                                    id={e.Id}
-                                    fullName={e.FullName}
-                                    jobTitleId={e.JobTitleId}
-                                    birthDate={new Date(e.BirthDate)} 
-                                    address={e.Address}
-                                    phone={e.Phone}
-                                    passportNumber={e.PassportNumber}
-                                    education={e.Education}
-                                    isAdmin={admin}
-                                />
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="8" className='text-center'>Сотрудники не найдены...</td>
-                            </tr>
-                        )}
-                    </Tbody>
-                </Table>
+            <div className='flex flex-col gap-5'>
+                <Box>
+                    <Table size="sm" minHeight="70vh">
+                        <Thead>
+                            <Tr>
+                                <Th>ФИО</Th>
+                                <Th>Должность</Th>
+                                <Th>Дата рождения</Th>
+                                <Th>Адрес</Th>
+                                <Th>Телефон</Th>
+                                <Th>Номер паспорта</Th>
+                                <Th>Образование</Th>
+                                {admin && <Th>Действия</Th>}
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {employees.length > 0 ? (
+                                employees.map((employee) => (
+                                    <Employee employee={employee} key={employee.Id} isAdmin={admin} />
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" className='text-center'> <Loading/></td>
+                                </tr>
+                            )}
+                        </Tbody>
+                    </Table>
+                </Box>
+                {employees.length > 0 && (
+                    <Pagination 
+                        currentPage={filter.pageNumber}
+                        totalPages={totalPages || 0}
+                        onPageChange={handlePageChange}
+                    /> 
+                )}
             </div>
         </section>
     );

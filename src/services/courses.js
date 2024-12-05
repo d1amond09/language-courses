@@ -88,3 +88,19 @@ export const deleteCourse = async (id) => {
         console.error('Ошибка при удалении курса:', error);
     }
 };
+
+
+export const fetchAllCourses = async () => {
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/courses?fields=id,name,tuitionFee,trainingProgram&PageSize=2000`, {
+            method: "GET",
+        });
+
+        return {
+            courses: response.data,
+        };
+    } catch (error) {
+        console.error('Ошибка при получении курсов:', error);
+        return []; 
+    }
+};

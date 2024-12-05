@@ -3,52 +3,31 @@ import {
     Td, 
     Button 
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
 import { fetchJobTitleById } from '../../services/jobTitles';
 import { useEffect, useState } from 'react';
+import Actions from '../Actions';
 
-export default function Employee({ 
-    id, 
-    fullName, 
-    jobTitleId,
-    birthDate, 
-    address, 
-    phone, 
-    passportNumber, 
-    education,
-    isAdmin
-}) {
+export default function Employee({ employee, isAdmin}) {
     const [jobTitle, setJobTitle] = useState({name: 'Не указана'});
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchJobTitleById(jobTitleId); 
+            const data = await fetchJobTitleById(employee.JobTitleId); 
             setJobTitle(data);    
         };
         fetchData();
     }, []);
 
     return (
-        <Tr key={id}>
-                        <Td>{fullName}</Td>
-                        <Td>{jobTitle?.name}</Td>
-                        <Td>{birthDate.toLocaleDateString()}</Td>
-                        <Td>{address}</Td>
-                        <Td>{phone}</Td>
-                        <Td>{passportNumber}</Td>
-                        <Td>{education}</Td>
-                        {
-                            isAdmin ? (
-                                <Td>
-                                    <Link to={`/employees/edit/${id}`}>
-                                        <Button size="sm" colorScheme="blue" variant="outline">Изменить</Button>
-                                    </Link>
-                                    <Link to={`/employees/delete/${id}`}>
-                                        <Button size="sm" colorScheme="red" variant="outline" ml={2}>Удалить</Button>
-                                    </Link>
-                                </Td>
-                            ) : ""
-                        }
-                    </Tr>
+        <Tr key={employee.Id}>
+            <Td>{employee.FullName}</Td>
+            <Td>{jobTitle.name}</Td>
+            <Td>{new Date(employee.BirthDate).toLocaleDateString()}</Td>
+            <Td>{employee.Address}</Td>
+            <Td>{employee.Phone}</Td>
+            <Td>{employee.PassportNumber}</Td>
+            <Td>{employee.Education}</Td>
+            { isAdmin ? (<Td><Actions link={"employees"} id={employee.Id} scale={"sm"} /></Td>) : ""}
+        </Tr>
     );
 }

@@ -4,14 +4,11 @@ import { fetchAllJobTitles } from "../../services/jobTitles";
 import { useNavigate } from "react-router-dom"; 
 import { createEmployee, updateEmployee } from "../../services/employees";
 
-export default function CreateEmployeeForm({ initialEmployee }) {
-    const [employee, setEmployee] = useState(initialEmployee || {
-        fullName: "",
-        birthDate: "",
-        address: "",
-        phone: "",
-        passportNumber: "",
-        education: "",
+export default function EmployeeForm({ initialData }) {
+    const [employee, setEmployee] = useState(initialData || {
+        fullName: "", birthDate: "",
+        address: "", phone: "",
+        passportNumber: "", education: "",
         jobTitleId: "",
     });
 
@@ -19,26 +16,26 @@ export default function CreateEmployeeForm({ initialEmployee }) {
     const [selectedJobTitle, setSelectedJobTitle] = useState("");
 
     useEffect(() => {
-        if (initialEmployee) {
-            const { fullName, jobTitleId } = initialEmployee;
+        if (initialData) {
+            const { fullName, jobTitleId } = initialData;
             const parts = fullName.split(' ');
 
             setEmployee({
                 fullName,
-                id: initialEmployee.id || "",
+                id: initialData.id || "",
                 surname: parts[0] || "",
                 name: parts[1] || "",
                 midname: parts[2] || "",
-                birthDate: initialEmployee.birthDate || "",
-                address: initialEmployee.address || "",
-                phone: initialEmployee.phone || "",
-                passportNumber: initialEmployee.passportNumber || "",
-                education: initialEmployee.education || "",
+                birthDate: initialData.birthDate || "",
+                address: initialData.address || "",
+                phone: initialData.phone || "",
+                passportNumber: initialData.passportNumber || "",
+                education: initialData.education || "",
                 jobTitleId: jobTitleId || "",
             });
             setSelectedJobTitle(jobTitleId || "");
         }
-    }, [initialEmployee]);
+    }, [initialData]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,7 +63,7 @@ export default function CreateEmployeeForm({ initialEmployee }) {
     const onSubmit = async (e) => {
         e.preventDefault();
         const employeeWithJobTitle = { ...employee, jobTitleId: selectedJobTitle };
-        if (initialEmployee) {
+        if (initialData) {
             await updateEmployee(employeeWithJobTitle); 
         } else {
             await createEmployee(employeeWithJobTitle);
@@ -79,7 +76,7 @@ export default function CreateEmployeeForm({ initialEmployee }) {
         <form onSubmit={onSubmit} className="w-3/4 flex flex-col gap-10">
             <div className="place-items-center mt-12">
                 <h1 className="font-bold text-4xl center">
-                    {initialEmployee ? "Изменение сотрудника" : "Создание сотрудника"}
+                    {initialData ? "Изменение сотрудника" : "Создание сотрудника"}
                 </h1>
             </div>
             <Input
@@ -128,7 +125,7 @@ export default function CreateEmployeeForm({ initialEmployee }) {
                 ))}
             </Select>
             <Button type="submit" colorScheme="blue">
-                {initialEmployee ? "Сохранить изменения" : "Создать"}
+                {initialData ? "Сохранить изменения" : "Создать"}
             </Button>
         </form>
     );

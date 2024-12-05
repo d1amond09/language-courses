@@ -6,42 +6,32 @@ import {
     Divider, 
     Heading,
     Text, 
-    Button
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import Actions from '../Actions';
 
 export default function JobTitle({ 
-    id, 
-    name, 
-    salary, 
-    responsibilities, 
-    requirements,
+    jobTitle,
     isAdmin
 }) {
     return (
         <Card variant={'filled'}>
-            <CardHeader>
-                <Heading size={'md'}>{name}</Heading>
-                <Heading fontWeight="semibold" size={'md'}>Зарплата: {salary} руб.</Heading>
+            <CardHeader m={0} pb={5}>
+                <Heading size={"md"} pb={2}>{jobTitle.Name}</Heading>
+                <Heading fontWeight="normal" size={'md'}>Зарплата: <strong>{jobTitle.Salary} руб.</strong></Heading>
             </CardHeader>
             <Divider borderColor={'gray'}/>
-            <CardBody>
-                <Text fontWeight="bold">Обязанности:</Text>
-                <Text>{responsibilities}</Text>
-                <Text fontWeight="bold">Требования:</Text>
-                <Text>{requirements}</Text>
+            <CardBody m={0} pb={2} pt={2}>
+                <Text minH={32}><strong>Обязанности:</strong> {jobTitle.Responsibilities ? jobTitle.Responsibilities : "Не указаны"}</Text>
+                <Text minH={32}><strong>Требования:</strong> {jobTitle.Requirements ? jobTitle.Requirements : "Не указаны"}</Text>
             </CardBody>
-            <Divider borderColor={'gray'}/>
             {
-                            isAdmin ? (
-                    <CardFooter>
-                        <Link to={`/jobtitles/edit/${id}`}>
-                            <Button className='ml-5' size="md" colorScheme="blue" variant="solid" width="full"> Изменить </Button>
-                        </Link>
-                        <Link to={`/jobtitles/delete/${id}`}>
-                            <Button className='ml-10' size="md" colorScheme="red" variant="solid" width="full"> Удалить </Button>
-                        </Link>
-                    </CardFooter>
+                isAdmin ? (
+                    <>
+                        <Divider borderColor={'gray'}/>
+                        <CardFooter pb={2} pt={4} >
+                            <Actions link={"jobtitles"} id={jobTitle.Id} />
+                        </CardFooter>
+                    </>
                 ) : ""
             }
         </Card>
