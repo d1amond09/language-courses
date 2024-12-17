@@ -11,7 +11,7 @@ export default function Student({ student, isAdmin }) {
             <Td>{student.Phone}</Td>
             <Td>{student.PassportNumber}</Td>
             <Td width="90%">
-                {student.Courses.length > 0 ? student.Courses.map(course => course.name).reduce((prev, curr) => [prev, <br key={curr} />, curr]) : 'Нет курсов'}
+                {student.Courses.length > 0 ? student.Courses.map(course => `${course.name} ${course.trainingProgram}: ${course.tuitionFee}`).reduce((prev, curr) => [prev, <br key={curr} />, curr]) : 'Нет курсов'}
             </Td>
             { isAdmin && (<Td> <Actions link={"students"} id={student.Id} scale={"sm"} /> </Td>) }
         </Tr>

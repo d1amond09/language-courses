@@ -9,7 +9,7 @@ export const apiFetch = async (url, options) => {
         token = await refreshAccessToken(); 
         if (!token) throw new Error('Unable to refresh token'); 
     }
-
+    console.log(token);
     const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -26,6 +26,27 @@ export const apiFetch = async (url, options) => {
     return response; 
 };
 
+export const sendPasswordResetEmail = async ({ email }) => {
+    const response = await axios.post(`${API_BASE_URL_AUTH}/authentication/forgot-password`, { email }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      credentials: 'include'
+    });
+    return response;
+};
+
+export const resetPassword = async ({ token, email, password, confirmPassword }) => {
+    const response = await axios.post(`${API_BASE_URL_AUTH}/authentication/reset-password`, { token, email, password, confirmPassword }, {
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        },
+        credentials: 'include'
+    });
+    return response;
+};
 
 export const refreshAccessToken = async () => {
     const refreshToken = localStorage.getItem('refreshToken');

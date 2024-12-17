@@ -7,7 +7,6 @@ import Pagination from '../Pagination';
 import { defaultFilters } from './Filters/data';
 import CreateButton from '../Actions/CreateButton';
 import Loading from '../Loading';
-import { Box } from '@chakra-ui/react';
     
 export default function Courses() {
     const { isAdmin } = useContext(AuthContext);
@@ -16,10 +15,20 @@ export default function Courses() {
     const [courses, setCourses] = useState([]);
     
     
+    const [loading, setLoading] = useState(false);
+
     const fetchData = async () => {
-        const { courses, totalPages } = await fetchCourses({ ...filter, pageNumber: filter.pageNumber });
-        setCourses(courses);
-        setTotalPages(totalPages); 
+        setLoading(true);
+        try {
+            const { courses, totalPages } = await fetchCourses({ ...filter, pageNumber: filter.pageNumber });
+            setCourses(courses);
+            setTotalPages(totalPages); 
+        } catch (error) {
+            console.error("Ошибка при загрузке курсов:", error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
     };
     
     useEffect(() => {
@@ -44,17 +53,16 @@ export default function Courses() {
             </div>
             <div className='flex-1 overflow-auto'>
                 <ul className='grid grid-cols-2 gap-5'> 
-                {courses.length > 0 ? (
+                {loading ? (
+                    <h1 className='text-4xl col-span-3 text-center mt-56'><Loading/></h1>
+                ) : courses.length > 0 ? (
                     courses.map((course) => (
                         <li key={course.Id}>
-                            <Course
-                                course={course}
-                                isAdmin={admin}
-                                />
+                            <Course course={course} isAdmin={admin} />
                         </li>
                     ))
                 ) : (
-                    <h1 className='text-4xl col-span-3 text-center mt-56'><Loading/></h1> 
+                    <h1 className='text-4xl col-span-3 text-center mt-56'>Нет курсов для отображения</h1>
                 )}
                 </ul>
                 {courses.length > 0 && (
